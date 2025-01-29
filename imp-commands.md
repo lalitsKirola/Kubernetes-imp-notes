@@ -216,3 +216,62 @@ kubectl uncordon <node-name>
 - **Custom Deployments**: Useful for scenarios where a fully-managed solution like EKS, AKS, or GKE is not preferred.
 
 
+-------------------------------------------------------------
+
+
+In Kubernetes, a **rollback** is used to revert a deployment to a previous version. The command to roll back a deployment is:
+
+```bash
+kubectl rollout undo deployment/<deployment-name>
+```
+
+### What this does:
+- It reverts the deployment to the **previous revision** (the state before the last update).
+- Kubernetes keeps a history of revisions, so you can easily undo changes if something goes wrong.
+
+---
+
+### Additional Options:
+1. **Rollback to a specific revision**:
+   If you want to roll back to a specific revision (not just the previous one), you can use:
+   ```bash
+   kubectl rollout undo deployment/<deployment-name> --to-revision=<revision-number>
+   ```
+   - `<revision-number>`: The revision number you want to revert to (you can find this using `kubectl rollout history`).
+
+2. **View rollout history**:
+   To see the history of revisions for a deployment:
+   ```bash
+   kubectl rollout history deployment/<deployment-name>
+   ```
+
+---
+
+### Example:
+1. Check the rollout history:
+   ```bash
+   kubectl rollout history deployment/my-app
+   ```
+   Output:
+   ```
+   REVISION  CHANGE-CAUSE
+   1         Initial deployment
+   2         Updated image to v2
+   3         Updated image to v3
+   ```
+
+2. Rollback to the previous revision:
+   ```bash
+   kubectl rollout undo deployment/my-app
+   ```
+
+3. Rollback to a specific revision (e.g., revision 1):
+   ```bash
+   kubectl rollout undo deployment/my-app --to-revision=1
+   ```
+
+---
+
+### Why Rollback?
+Rollbacks are useful when a new update causes issues (e.g., bugs, crashes) and you need to quickly revert to a stable version. Kubernetes makes this process simple and efficient.
+
